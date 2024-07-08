@@ -1,5 +1,5 @@
 export const api = {
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: "http://localhost:8080",
 };
 
 export async function addRoom(photo, roomType, roomPrice) {
@@ -26,7 +26,7 @@ export async function addRoom(photo, roomType, roomPrice) {
 
 export async function getRoomTypes() {
   try {
-    const response = await fetch(`${api.baseURL}/rooms/room-types`);
+    const response = await fetch(`${api.baseURL}/rooms/room/types`);
     const data = await response.json();
     return data;
   } catch (error) {
