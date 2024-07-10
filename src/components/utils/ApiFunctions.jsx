@@ -15,7 +15,7 @@ export async function addRoom(photo, roomType, roomPrice) {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({}));
       throw new Error(
         `Error adding new room: ${errorData.message || response.status}`
       );
@@ -63,7 +63,7 @@ export async function deleteRoom(roomId) {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
+      const errorData = await response.json().catch(() => ({}));
       throw new Error(
         `Error deleting room: ${errorData.message || response.status}`
       );
@@ -73,5 +73,47 @@ export async function deleteRoom(roomId) {
   } catch (error) {
     console.error("Error deleting room:", error);
     throw new Error("Error deleting room");
+  }
+}
+
+export async function updateRoom(roomId, roomData) {
+  const formData = new FormData();
+  formData.append("photo", roomData.photo);
+  formData.append("roomType", roomData.roomType);
+  formData.append("roomPrice", roomData.roomPrice);
+
+  try {
+    const response = await fetch(`${api.baseURL}/rooms/update/room/${roomId}`, {
+      method: "PUT",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `Error updating room: ${errorData.message || response.status}`
+      );
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error updating room:", error);
+    throw new Error("Error updating room");
+  }
+}
+
+export async function getRoomById(roomId) {
+  try {
+    const response = await fetch(`${api.baseURL}/rooms/room/${roomId}`);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch room: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching room:", error.message);
+    throw new Error("Failed to fetch room data. Please try again.");
   }
 }

@@ -30,7 +30,7 @@ const RoomFilter = ({ data, setFilteredData }) => {
         onChange={handleFilterChange}
         aria-label="Filter Rooms by Type"
       >
-        <option value={""}>Select a room type to filter</option>
+        <option value={""}>Select room type</option>
         {roomTypes.map((type, index) => (
           <option key={index} value={String(type)}>
             {String(type)}
