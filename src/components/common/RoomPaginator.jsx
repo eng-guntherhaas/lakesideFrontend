@@ -3,7 +3,7 @@ const RoomPaginator = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <nav>
-      <ul className="pagination, justify-content-center">
+      <ul className="pagination justify-content-center">
         {pageNumbers.map((pageNumber) => (
           <li
             key={pageNumber}
@@ -14,6 +14,7 @@ const RoomPaginator = ({ currentPage, totalPages, onPageChange }) => {
             <button
               className="page-link"
               onClick={() => onPageChange(pageNumber)}
+              aria-current={currentPage === pageNumber ? "page" : undefined}
             >
               {pageNumber}
             </button>
