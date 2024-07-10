@@ -7,7 +7,7 @@ const RoomFilter = ({ data, setFilteredData }) => {
     const selectedRoomType = e.target.value;
     setFilter(selectedRoomType);
     const filteredRooms = data.filter((room) =>
-      room.roomType.toLowerCase().include(selectedRoomType.toLowerCase())
+      room.roomType.toLowerCase().includes(selectedRoomType.toLowerCase())
     );
     setFilteredData(filteredRooms);
   };
@@ -31,8 +31,8 @@ const RoomFilter = ({ data, setFilteredData }) => {
       >
         <option value={""}>Select a room type to filter</option>
         {roomTypes.map((type, index) => (
-          <option key={index} value={type}>
-            {type}
+          <option key={index} value={String(type)}>
+            {String(type)}
           </option>
         ))}
       </select>

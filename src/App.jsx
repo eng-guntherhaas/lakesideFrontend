@@ -1,11 +1,13 @@
 import "./App.css";
 import "./index.css";
 import AddRoom from "./components/room/AddRoom";
+import ExistingRooms from "./components/room/ExistingRooms";
 
 function App() {
   return (
     <>
       <AddRoom />
+      <ExistingRooms />
     </>
   );
 }
