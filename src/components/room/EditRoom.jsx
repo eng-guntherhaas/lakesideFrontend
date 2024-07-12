@@ -4,6 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import RoomTypeSelector from "../common/RoomTypeSelector";
 
 const EditRoom = () => {
+  const { roomId } = useParams();
+
   const [room, setRoom] = useState({
     photo: null,
     roomType: "",
@@ -13,7 +15,24 @@ const EditRoom = () => {
   const [imagePreview, setImagePreview] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { roomId } = useParams();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchRoom = async () => {
+      setLoading(true);
+      try {
+        const roomData = await getRoomById(roomId);
+        setRoom(roomData);
+        setImagePreview(roomData.photo);
+        setLoading(false);
+      } catch (error) {
+        console.error(error.message);
+        setErrorMessage("Failed to fetch room data.");
+        setLoading(false);
+      }
+    };
+    fetchRoom();
+  }, [roomId]);
 
   const handleImageChange = (e) => {
     const selectedImage = e.target.files[0];
@@ -28,40 +47,30 @@ const EditRoom = () => {
     setRoom((prev) => ({ ...prev, [name]: value }));
   };
 
-  useEffect(() => {
-    const fetchRoom = async () => {
-      try {
-        const roomData = await getRoomById(roomId);
-        setRoom(roomData);
-        setImagePreview(roomData.photo);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    fetchRoom();
-  }, [roomId]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const success = await updateRoom(roomId, room);
       if (success) {
-        setSuccessMessage("The room's informations were updated");
-        const updatedRommData = await getRoomById(roomId);
-        setRoom(updatedRommData);
-        setImagePreview(updatedRommData.photo);
+        setSuccessMessage("The room's information was updated successfully.");
+        const updatedRoomData = await getRoomById(roomId);
+        setRoom(updatedRoomData);
+        setImagePreview(updatedRoomData.photo);
         setErrorMessage("");
       } else {
-        setErrorMessage("Error updating room");
+        setErrorMessage("Error updating room.");
       }
     } catch (error) {
-      setErrorMessage(error.message);
+      console.error(error.message);
+      setErrorMessage("Failed to update room. Please try again.");
+    } finally {
+      setLoading(false);
+      setTimeout(() => {
+        setSuccessMessage("");
+        setErrorMessage("");
+      }, 3000);
     }
-
-    setTimeout(() => {
-      setSuccessMessage("");
-      setErrorMessage("");
-    }, 3000);
   };
 
   return (
@@ -81,21 +90,22 @@ const EditRoom = () => {
               <div className="alert alert-danger fade show">{errorMessage}</div>
             )}
 
+            {loading && <p>Loading...</p>}
+
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <label htmlFor="roomType" className="form-label">
                   Room Type
                 </label>
-                <div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="roomType"
-                    name="roomType"
-                    value={room.roomType}
-                    onChange={handleRoomInputChange}
-                  />
-                </div>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="roomType"
+                  name="roomType"
+                  value={room.roomType}
+                  onChange={handleRoomInputChange}
+                  required
+                />
               </div>
               <div className="mb-3">
                 <label htmlFor="roomPrice" className="form-label">
@@ -140,7 +150,7 @@ const EditRoom = () => {
                 >
                   Back
                 </Link>
-                <button type="submit" className="btn btn-outline-warning">
+                <button type="submit" className="btn btn-warning">
                   Edit Room
                 </button>
               </div>
