@@ -9,16 +9,18 @@ const RoomCard = ({ room }) => {
           <div className="flex-shrink-0 mr-3 mb-3 mb-md-0">
             <Card.Img
               variant="top"
-              src={`data:image/png;base64, ${room.photo}`}
-              alt="Room Photo"
+              src={`data:image/png;base64,${room.photo}`}
+              alt={`Photo of ${room.roomType}`}
               style={{ width: "100%", maxWidth: "200px", height: "auto" }}
             />
           </div>
           <div className="flex-grow-1 ml-3 px-5">
             <Card.Title className="hotel-color">{room.roomType}</Card.Title>
-            <Card.Title className="room-price">{room.roomPrice}</Card.Title>
+            <Card.Title className="room-price">
+              $ {room.roomPrice} / night
+            </Card.Title>
             <Card.Text>
-              Some room information goes here for the guest to read throught
+              Some room information goes here for the guest to read through
             </Card.Text>
           </div>
           <div className="flex-shrink-0 mt-3">

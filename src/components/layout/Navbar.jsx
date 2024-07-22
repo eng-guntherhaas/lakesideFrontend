@@ -38,7 +38,7 @@ const Navbar = () => {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" aria-current="page" to="/admin">
-                Manage Rooms
+                Admin
               </NavLink>
             </li>
           </ul>
