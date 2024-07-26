@@ -6,7 +6,7 @@ const Parallax = () => {
       <Container className="text-center px-5 py-5 justify-content-center">
         <div className="animated-text bounceIn">
           <h1>
-            Welcome to <span className="hotel-color">LakeSide Hotel</span>
+            Welcome to <span className="hotel-color">Grand Budapest Hotel</span>
           </h1>
           <h3>We offer the best services for all your needs</h3>
         </div>

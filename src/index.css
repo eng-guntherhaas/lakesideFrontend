@@ -79,7 +79,7 @@ body {
 }
 
 .parallax {
-  background-image: url("./assets/images/parrall.jpg");
+  background-image: url("./assets/images/interior.jpg");
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
@@ -89,11 +89,12 @@ body {
 
 .header {
   position: relative;
-  height: 150px;
+  height: 200px;
   background-size: cover;
-  background-image: url("./assets/images/services4.jpg");
-  background-position: center center;
+  background-image: url("./assets/images/service.jpg");
+  background-position: center;
 }
+
 .header-title {
   color: #fff;
   font-size: 4rem;
@@ -194,7 +195,7 @@ h2 {
 
 /* The header banner */
 .header-banner {
-  background-image: url("./assets/images/services-1.jpg");
+  background-image: url("./assets/images/front.jpeg");
   background-size: cover;
   background-position: center;
   position: relative;

@@ -1,8 +1,17 @@
+import HotelService from "../common/HotelService";
+import Parallax from "../common/Parallax";
+import MainHeader from "../layout/MainHeader";
+
 const Home = () => {
   return (
-    <>
-      <h2>Welcome to LakeSide Hotel</h2>
-    </>
+    <section>
+      <MainHeader />
+      <section className="container">
+        <Parallax />
+        <HotelService />
+        <Parallax />
+      </section>
+    </section>
   );
 };
 
