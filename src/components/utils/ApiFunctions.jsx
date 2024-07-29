@@ -117,3 +117,85 @@ export async function getRoomById(roomId) {
     throw new Error("Failed to fetch room data. Please try again.");
   }
 }
+
+export async function bookRoom(roomId, booking) {
+  try {
+    const response = await fetch(
+      `${api.baseURL}/bookings/room/${roomId}/booking`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(booking),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error("Error booking room:", errorData);
+      throw new Error(
+        `Error booking room: ${errorData.message || response.status}`
+      );
+    }
+    return { success: true };
+  } catch (error) {
+    console.error("Error booking room:", error);
+    return { success: false, error: "Error booking room" };
+  }
+}
+
+export async function getAllBookings() {
+  try {
+    const response = await fetch(`${api.baseURL}/bookings/all-bookings`);
+    if (!response.ok) {
+      throw new Error(`Error fetching bookings: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    throw new Error("Error fetching bookings");
+  }
+}
+
+export async function getBookingByConfirmationCode(confimationCode) {
+  try {
+    const response = await fetch(
+      `${api.baseURL}/bookings/confirmation/${confimationCode}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch booking: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching booking:", error.message);
+    throw new Error("Failed to fetch booking data. Please try again.");
+  }
+}
+
+export async function cancelBooking(bookingId) {
+  try {
+    const response = await fetch(
+      `${api.baseURL}/bookings/booking/${bookingId}/delete`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        `Error canceling booking: ${errorData.message || response.status}`
+      );
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error canceling booking:", error);
+    throw new Error("Error canceling booking");
+  }
+}

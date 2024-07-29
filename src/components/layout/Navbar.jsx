@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 
 const Navbar = () => {
   const [showAccount, setShowAccount] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleAccountClick = () => {
     setShowAccount(!showAccount);
   };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowAccount(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary px-5 shadow mt-5 sticky-top">
@@ -61,7 +75,10 @@ const Navbar = () => {
               >
                 Account
               </a>
-              <ul className={`dropdown-menu ${showAccount ? "show" : ""}`}>
+              <ul
+                ref={dropdownRef}
+                className={`dropdown-menu ${showAccount ? "show" : ""}`}
+              >
                 <li>
                   <Link className="dropdown-item" to="/login">
                     Login
