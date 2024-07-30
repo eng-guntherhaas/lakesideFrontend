@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { bookRoom, getRoomById } from "../utils/ApiFunctions";
-import { useAsyncError, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { Form, FormControl } from "react-bootstrap";
 import BookingSummary from "./BookingSummary";
@@ -16,8 +16,8 @@ const BookingForm = () => {
     guestEmail: "",
     checkInDate: "",
     checkOutDate: "",
-    numberOfAdults: "",
-    numberOfChildren: "",
+    numberOfAdults: 0,
+    numberOfChildren: 0,
   });
 
   const [roomInfo, setRoomInfo] = useState({
@@ -50,7 +50,7 @@ const BookingForm = () => {
   const calculatePayment = () => {
     const checkInDate = moment(booking.checkInDate);
     const checkOutDate = moment(booking.checkOutDate);
-    const diffInDays = checkOutDate.diff(checkInDate);
+    const diffInDays = checkOutDate.diff(checkInDate) / (60 * 60 * 24 * 1000);
     const pricePerDay = roomPrice ? roomPrice : 0;
     return diffInDays * pricePerDay;
   };
@@ -67,7 +67,7 @@ const BookingForm = () => {
     if (
       !moment(booking.checkOutDate).isSameOrAfter(moment(booking.checkInDate))
     ) {
-      setErrorMessage("Check-Out date must be after Check-In date");
+      setErrorMessage("Check-Out date must be after Check-in date");
       return false;
     } else {
       setErrorMessage("");
@@ -78,15 +78,24 @@ const BookingForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    if (
-      form.checkValidity() === false ||
-      !isGuestCountValid() ||
-      !isCheckOutDateValid()
-    ) {
-      e.stopPropagation();
-    } else {
-      setIsSubmitted(true);
+    if (form.checkValidity() === false) {
+      setIsValidated(true);
+      return;
     }
+
+    if (!isGuestCountValid()) {
+      setErrorMessage("Please enter a valid guest count");
+      setIsValidated(true);
+      return;
+    }
+
+    if (!isCheckOutDateValid()) {
+      setErrorMessage("Check-out date must be after check-in date");
+      setIsValidated(true);
+      return;
+    }
+
+    setIsSubmitted(true);
     setIsValidated(true);
   };
 
@@ -94,10 +103,10 @@ const BookingForm = () => {
     try {
       const confirmationCode = await bookRoom(roomId, booking);
       setIsSubmitted(true);
-      navigate("/", { state: { message: confirmationCode } });
+      navigate("/booking-result", { state: { message: confirmationCode } });
     } catch (error) {
       setErrorMessage(error.message);
-      navigate("/", { state: { error: errorMessage } });
+      navigate("/booking-result", { state: { error: errorMessage } });
     }
   };
 
@@ -181,11 +190,6 @@ const BookingForm = () => {
                         Please enter the check-out date
                       </Form.Control.Feedback>
                     </div>
-                    {errorMessage && (
-                      <p className="error-message text-danger">
-                        {errorMessage || "An unknown error occurred."}
-                      </p>
-                    )}
                   </div>
                 </fieldset>
                 <fieldset style={{ border: "2px" }}>
@@ -217,7 +221,6 @@ const BookingForm = () => {
                         id="numberOfChildren"
                         name="numberOfChildren"
                         value={booking.numberOfChildren}
-                        placeholder="0"
                         onChange={handleInputChange}
                         aria-label="Number of children"
                       />
@@ -244,7 +247,7 @@ const BookingForm = () => {
             {isSubmitted && (
               <BookingSummary
                 booking={booking}
-                totalCost={calculatePayment}
+                totalCost={calculatePayment()}
                 isFormValid={isValidated}
                 onConfirm={handleBooking}
               />

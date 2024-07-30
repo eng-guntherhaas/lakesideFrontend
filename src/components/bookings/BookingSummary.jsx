@@ -47,18 +47,20 @@ const BookingSummary = ({ booking, totalCost, isFormValid, onConfirm }) => {
       <div>
         <h5>Number of Guests</h5>
         <strong>
-          Adult{booking.numberOfAdults > 1 ? "s" : ""}: {booking.numberOfAdults}
-          Child{booking.numberOfChildren > 1 ? "ren" : ""}:{" "}
-          {booking.numberOfChildren}
+          <p>
+            Adult{booking.numberOfAdults > 1 ? "s" : ""}:{" "}
+            {booking.numberOfAdults}
+          </p>
+          <p>Children: {booking.numberOfChildren}</p>
         </strong>
       </div>
       <div>
         {totalCost > 0 ? (
           <>
             <p>
-              Total payment: <strong>{totalCost}</strong>
+              Total payment: <strong>$ {totalCost}</strong>
             </p>
-            {isFormValid && !isProcessingPayment ? (
+            {isFormValid && (
               <Button variant="success" onClick={handleConfirmBooking}>
                 {isProcessingPayment ? (
                   <>
@@ -73,7 +75,7 @@ const BookingSummary = ({ booking, totalCost, isFormValid, onConfirm }) => {
                   "Confirm Booking and proceed to payment"
                 )}
               </Button>
-            ) : null}
+            )}
           </>
         ) : (
           <p className="text-danger">

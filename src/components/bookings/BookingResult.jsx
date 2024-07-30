@@ -1,14 +1,14 @@
 import { useLocation } from "react-router-dom";
 import Header from "../common/Header";
 
-const BookingSuccess = () => {
+const BookingResult = () => {
   const location = useLocation();
   const message = location.state?.message;
   const error = location.state?.error;
 
   return (
     <div>
-      <Header title="Booking Successful" />
+      <Header title="Booking Status" />
       <div className="mt-5">
         {message ? (
           <div>
@@ -26,4 +26,4 @@ const BookingSuccess = () => {
   );
 };
 
-export default BookingSuccess;
+export default BookingResult;
