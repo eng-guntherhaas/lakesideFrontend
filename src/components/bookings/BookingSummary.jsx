@@ -20,7 +20,7 @@ const BookingSummary = ({ booking, totalCost, isFormValid, onConfirm }) => {
 
   useEffect(() => {
     if (isProcessingPayment) {
-      navigate("/booking-success");
+      navigate("/booking-result");
     }
   }, [isProcessingPayment, navigate]);
 
