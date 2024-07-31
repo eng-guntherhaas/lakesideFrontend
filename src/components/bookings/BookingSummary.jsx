@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -10,19 +10,17 @@ const BookingSummary = ({ booking, totalCost, isFormValid, onConfirm }) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const navigate = useNavigate();
 
-  const handleConfirmBooking = () => {
+  const handleConfirmBooking = async () => {
     setIsProcessingPayment(true);
-    setTimeout(() => {
+    try {
+      const message = await onConfirm();
+      navigate("/booking-result", { state: { message } });
+    } catch (error) {
+      navigate("/booking-result", { state: { error: error.message } });
+    } finally {
       setIsProcessingPayment(false);
-      onConfirm();
-    }, 3000);
-  };
-
-  useEffect(() => {
-    if (isProcessingPayment) {
-      navigate("/booking-result");
     }
-  }, [isProcessingPayment, navigate]);
+  };
 
   return (
     <div className="card card-body mt-5">

@@ -138,7 +138,9 @@ export async function bookRoom(roomId, booking) {
         `Error booking room: ${errorData.message || response.status}`
       );
     }
-    return { success: true };
+
+    const data = await response.text();
+    return { success: true, message: data };
   } catch (error) {
     console.error("Error booking room:", error);
     return { success: false, error: "Error booking room" };

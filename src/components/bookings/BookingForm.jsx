@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { bookRoom, getRoomById } from "../utils/ApiFunctions";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import moment from "moment";
 import { Form, FormControl } from "react-bootstrap";
 import BookingSummary from "./BookingSummary";
@@ -20,13 +20,11 @@ const BookingForm = () => {
     numberOfChildren: 0,
   });
 
-  const [roomInfo, setRoomInfo] = useState({
-    photo: "",
-    roomType: "",
-    roomPrice: "",
-  });
-
-  const navigate = useNavigate();
+  // const [roomInfo, setRoomInfo] = useState({
+  //   photo: "",
+  //   roomType: "",
+  //   roomPrice: "",
+  // });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -100,14 +98,8 @@ const BookingForm = () => {
   };
 
   const handleBooking = async () => {
-    try {
-      const confirmationCode = await bookRoom(roomId, booking);
-      setIsSubmitted(true);
-      navigate("/booking-result", { state: { message: confirmationCode } });
-    } catch (error) {
-      setErrorMessage(error.message);
-      navigate("/booking-result", { state: { error: errorMessage } });
-    }
+    const response = await bookRoom(roomId, booking);
+    return response.message;
   };
 
   return (
